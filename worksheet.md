@@ -23,7 +23,6 @@ Draw a 20 by 20 grid on a 720x720 window.  Each cell in the grid should be 35 pi
 The "grid" has no identity - it is just drawn.  Later on we will need to do lots of things "with" this grid.  We will modify it and adjust it and ask it questions.  Our task here is to refactor the program to give this grid an identity.  We will create an object to represent the grid and will give that object its own `paint` method for drawing the grid.
 
 We will also need to give an identity to each "cell" of the grid and make each cell responsible for it's own painting to the screen.
-
 Modify the program to make these things happen.  Make a `Grid` class and a `Cell` class and organise them in a sensible way.  What fields and methods should each class have?
 
 # Task 5
