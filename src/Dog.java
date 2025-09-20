@@ -1,27 +1,17 @@
 import java.awt.Color;
-import java.awt.Polygon;
-import java.util.ArrayList;
+import java.awt.Graphics;
+import java.awt.Point;
 
 public class Dog extends Actor {
-  public Dog(Cell inLoc) {
-    loc = inLoc;
-    color = Color.YELLOW;
-    display = new ArrayList<Polygon>();
-    Polygon ear1 = new Polygon();
-    ear1.addPoint(loc.x + 5, loc.y + 5);
-    ear1.addPoint(loc.x + 15, loc.y + 5);
-    ear1.addPoint(loc.x + 5, loc.y + 15);
-    Polygon ear2 = new Polygon();
-    ear2.addPoint(loc.x + 20, loc.y + 5);
-    ear2.addPoint(loc.x + 30, loc.y + 5);
-    ear2.addPoint(loc.x + 30, loc.y + 15);
-    Polygon face = new Polygon();
-    face.addPoint(loc.x + 8, loc.y + 7);
-    face.addPoint(loc.x + 27, loc.y + 7);
-    face.addPoint(loc.x + 27, loc.y + 25);
-    face.addPoint(loc.x + 8, loc.y + 25);
-    display.add(face);
-    display.add(ear1);
-    display.add(ear2);
-  }
-}
+    public Dog(String name, int col, int row) { super(name, col, row); }
+
+    @Override
+    public void draw(Graphics g, Point topLeft) {
+        int x = topLeft.x + col*Cell.SIZE + 6;
+        int y = topLeft.y + row*Cell.SIZE + 6;
+        g.setColor(Color.GRAY);
+        g.fillOval(x, y, 24, 18);
+        g.setColor(Color.BLACK);
+        g.drawOval(x, y, 24, 18);
+    }
+};

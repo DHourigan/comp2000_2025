@@ -1,32 +1,61 @@
-import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 
-public class Stage {
-  Grid grid;
-  List<Actor> actors;
-
-  public Stage() {
-    grid = new Grid();
-    actors = new ArrayList<Actor>();
-    actors.add(new Cat(grid.cellAtColRow(0, 0).get()));
-    actors.add(new Dog(grid.cellAtColRow(0, 15).get()));
-    actors.add(new Bird(grid.cellAtColRow(12, 9).get()));    
-  }
-
-  public void paint(Graphics g, Point mouseLoc) {
-    grid.paint(g, mouseLoc);
-    for(Actor a: actors) {
-      a.paint(g);
+/**
+ * Small window to render the Grid and allow simple interaction.
+ */
+public class Stage extends JFrame {
+    Grid grid;
+    public Stage(Grid grid) {
+        super("Grid Stage");
+        this.grid = grid;
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        Canvas canvas = new Canvas();
+        this.setContentPane(canvas);
+        this.pack();
+        this.setVisible(true);
     }
-    Optional<Cell> underMouse = grid.cellAtPoint(mouseLoc);
-    if(underMouse.isPresent()) {
-      Cell hoverCell = underMouse.get();
-      g.setColor(Color.DARK_GRAY);
-      g.drawString(String.valueOf(hoverCell.col) + String.valueOf(hoverCell.row), 740, 30);
+
+    class Canvas extends JPanel {
+        public Canvas() {
+            setPreferredSize(new Dimension(800, 700));
+            setFocusable(true);
+            addKeyListener(new KeyAdapter() {
+                @Override
+                public void keyPressed(KeyEvent e) {
+                    // basic control: press 1 to make first actor try pickup on its cell
+                    if (e.getKeyChar() == '1') {
+                        grid.actors[0].tryPickup(grid.cells);
+                        repaint();
+                    } else if (e.getKeyChar() == 'm') {
+                        // move actor 0 one cell to the right (demo movement)
+                        Actor a = grid.actors[0];
+                        a.setPos(Math.min(grid.cells.length-1, a.getCol()+1), a.getRow());
+                        repaint();
+                    }
+                }
+            });
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            Point topLeft = grid.gridTopLeft();
+            // draw cells
+            for (Cell[] cell : grid.cells) {
+                for (Cell cell1 : cell) {
+                    cell1.draw(g, topLeft);
+                }
+            }
+            // draw actors
+            for (Actor a : grid.actors) {
+                a.draw(g, topLeft);
+            }
+        }
     }
-  }
-}
+};
